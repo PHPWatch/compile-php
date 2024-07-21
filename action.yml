@@ -145,7 +145,7 @@ runs:
       shell: bash
       run: |
           cd ./.php-src
-          make -j$(/usr/bin/nproc)
+          make -j$(/usr/bin/nproc) >/dev/null
           cd ../
 
     - name: Install
