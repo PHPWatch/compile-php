@@ -161,4 +161,4 @@ runs:
     - name: Cleanup
       shell: bash
       run: |
-        rm .php-src
+        rm .php-src -Rf

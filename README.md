@@ -18,7 +18,7 @@ jobs:
     name: Compile and install PHP - Test
     steps:
       - name: Setup PHP
-        uses: PHPWatch/compile-php
+        uses: PHPWatch/compile-php@main
 
       - name: Display versions and env
         run: |

@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup PHP
-        uses: PHPWatch/compile-php
+        uses: PHPWatch/compile-php@main
 
       - name: Display versions and env
         run: |
