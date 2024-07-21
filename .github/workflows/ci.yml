@@ -1,0 +1,21 @@
+name: Tests
+permissions: read-all
+on:
+  pull_request:
+  push:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    name: Compile and install PHP - Test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: PHPWatch/compile-php
+
+      - name: Display versions and env
+        run: |
+          php -v
+          php -m
+

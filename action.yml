@@ -1,0 +1,164 @@
+name: Compile and install PHP from source
+description: Compile and install PHP from source
+runs:
+  using: composite
+  steps:
+    - name: Checkout php-src repo
+      uses: actions/checkout@v4
+      with:
+        repository: php/php-src
+        path: .php-src
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        set -x
+
+        export DEBIAN_FRONTEND=noninteractive
+
+        sudo apt update -y | true
+        sudo apt install -y \
+          autoconf \
+          gcc \
+          make \
+          curl \
+          unzip \
+          bison \
+          re2c \
+          locales \
+          ldap-utils \
+          openssl \
+          slapd \
+          language-pack-de \
+          libgmp-dev \
+          libicu-dev \
+          libtidy-dev \
+          libenchant-2-dev \
+          libbz2-dev \
+          libsasl2-dev \
+          libxpm-dev \
+          libzip-dev \
+          libsqlite3-dev \
+          libsqlite3-mod-spatialite \
+          libwebp-dev \
+          libonig-dev \
+          libcurl4-openssl-dev \
+          libxml2-dev \
+          libxslt1-dev \
+          libpq-dev \
+          libreadline-dev \
+          libldap2-dev \
+          libsodium-dev \
+          libargon2-0-dev \
+          libmm-dev \
+          libsnmp-dev \
+          snmpd \
+          snmp-mibs-downloader \
+          freetds-dev \
+          unixodbc-dev \
+          llvm \
+          clang \
+          sendmail \
+          firebird-dev \
+          liblmdb-dev \
+          libtokyocabinet-dev \
+          libdb-dev \
+          libqdbm-dev \
+          libjpeg-dev \
+          libpng-dev \
+          libfreetype6-dev
+        cd ..
+
+    - name: Configure build
+      shell: bash
+      run: |
+          set -x
+          cd .php-src
+          ./buildconf --force
+          ./configure \
+            --enable-option-checking=fatal \
+            --prefix=/usr \
+            --enable-phpdbg \
+            --enable-fpm \
+            --with-pdo-mysql=mysqlnd \
+            --with-mysqli=mysqlnd \
+            --with-pgsql \
+            --with-pdo-pgsql \
+            --with-pdo-sqlite \
+            --enable-intl \
+            --without-pear \
+            --enable-gd \
+            --with-jpeg \
+            --with-webp \
+            --with-freetype \
+            --with-xpm \
+            --enable-exif \
+            --with-zip \
+            --with-zlib \
+            --enable-soap \
+            --enable-xmlreader \
+            --with-xsl \
+            --with-tidy \
+            --enable-sysvsem \
+            --enable-sysvshm \
+            --enable-shmop \
+            --enable-pcntl \
+            --with-readline \
+            --enable-mbstring \
+            --with-curl \
+            --with-gettext \
+            --enable-sockets \
+            --with-bz2 \
+            --with-openssl \
+            --with-gmp \
+            --enable-bcmath \
+            --enable-calendar \
+            --enable-ftp \
+            --with-enchant=/usr \
+            --enable-sysvmsg \
+            --with-ffi \
+            --enable-zend-test \
+            --enable-dl-test=shared \
+            --with-ldap \
+            --with-ldap-sasl \
+            --with-password-argon2 \
+            --with-mhash \
+            --with-sodium \
+            --enable-dba \
+            --with-cdb \
+            --enable-flatfile \
+            --enable-inifile \
+            --with-tcadb \
+            --with-lmdb \
+            --with-qdbm \
+            --with-snmp \
+            --with-unixODBC \
+            --with-pdo-odbc=unixODBC,/usr \
+            --with-config-file-path=/etc \
+            --with-config-file-scan-dir=/etc/php.d \
+            --with-pdo-firebird \
+            --with-pdo-dblib \
+            --enable-werror
+          cd ../
+
+    - name: Compile
+      shell: bash
+      run: |
+          cd ./.php-src
+          make -j$(/usr/bin/nproc)
+          cd ../
+
+    - name: Install
+      shell: bash
+      run: |
+          set -x
+          cd ./.php-src
+          sudo make install
+          sudo mkdir -p /etc/php.d
+          sudo chmod 777 /etc/php.d
+          cd ../
+
+    - name: Cleanup
+      shell: bash
+      run: |
+        rm .php-src
