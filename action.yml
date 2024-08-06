@@ -156,6 +156,13 @@ runs:
           sudo chmod 777 /etc/php.d
           cd ../
 
+    - name: Enable opcache
+      shell: bash
+      run: |
+        echo zend_extension=opcache.so >> /etc/php.d/opcache.ini
+        echo opcache.enable=1 >> /etc/php.d/opcache.ini
+        echo opcache.enable_cli=1 >> /etc/php.d/opcache.ini
+
     - name: Cleanup
       shell: bash
       run: |
