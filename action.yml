@@ -134,7 +134,6 @@ runs:
             --with-pdo-odbc=unixODBC,/usr \
             --with-config-file-path=/etc \
             --with-config-file-scan-dir=/etc/php.d \
-            --with-pdo-firebird \
             --with-pdo-dblib \
             --enable-werror
           cd ../
