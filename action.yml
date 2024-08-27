@@ -49,7 +49,7 @@ runs:
           libreadline-dev \
           libldap2-dev \
           libsodium-dev \
-          libargon2-0-dev \
+          libargon2-dev \
           libmm-dev \
           libsnmp-dev \
           snmpd \
