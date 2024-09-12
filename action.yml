@@ -66,6 +66,7 @@ runs:
           libqdbm-dev \
           libjpeg-dev \
           libpng-dev \
+          libavif-dev \
           libfreetype6-dev
         cd ..
 
@@ -90,6 +91,7 @@ runs:
             --enable-gd \
             --with-jpeg \
             --with-webp \
+            --with-avif \
             --with-freetype \
             --with-xpm \
             --enable-exif \
