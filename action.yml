@@ -15,6 +15,9 @@ runs:
         path: .php-src
         ref: ${{ inputs.branch }}
 
+    - name: Setup Curl
+      uses: PHPWatch/setup-curl@main
+
     - name: Install dependencies
       shell: bash
       run: |
