@@ -15,8 +15,25 @@ runs:
         path: .php-src
         ref: ${{ inputs.branch }}
 
-    - name: Setup Curl
-      uses: PHPWatch/setup-curl@main
+    - name: Show existing env
+      shell: bash
+      run: |
+        curl --version
+
+    - name: Checkout curl repo
+      uses: actions/checkout@v4
+      with:
+        repository: curl/curl
+        path: .curl
+        fetch-depth: 0
+
+    - name: Checkout latest release tag
+      shell: bash
+      run: |
+        cd .curl
+        LATEST_TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+        git checkout $LATEST_TAG
+        cd ../
 
     - name: Install dependencies
       shell: bash
@@ -24,9 +41,12 @@ runs:
         set -x
 
         export DEBIAN_FRONTEND=noninteractive
-
+        sudo sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources
         sudo apt update -y | true
+        sudo apt build-dep libcurl4-openssl-dev curl -y
+        sudo apt build-dep libcurl4-openssl-dev curl -y
         sudo apt install -y \
+          libgsasl-dev \
           autoconf \
           gcc \
           make \
@@ -78,6 +98,83 @@ runs:
           libavif-dev \
           libfreetype6-dev
         cd ..
+
+    - name: Configure build
+      shell: bash
+      run: |
+        set -x
+        cd .curl
+        autoreconf -fi
+        ./configure --disable-symbol-hiding --enable-versioned-symbols	\
+          --enable-threaded-resolver --with-lber-lib=lber		\
+          --enable-websockets \
+          --with-gssapi=/usr --with-nghttp2	\
+          --includedir=/usr/include/$(DEB_HOST_MULTIARCH)		\
+          --with-zsh-functions-dir=/usr/share/zsh/vendor-completions \
+          --with-fish-functions-dir=/usr/share/fish/vendor_completions.d \
+          --with-ca-path=/etc/ssl/certs \
+          --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt \
+          --without-libssh --with-libssh2 \
+          --with-openssl \
+          --enable-http           \
+          --enable-ftp            \
+          --enable-file           \
+          --enable-ipfs           \
+          --enable-ldap           \
+          --enable-ldaps          \
+          --enable-rtsp           \
+          --enable-proxy          \
+          --enable-dict           \
+          --enable-telnet         \
+          --enable-tftp           \
+          --enable-pop3           \
+          --enable-imap           \
+          --enable-smb            \
+          --enable-smtp           \
+          --enable-gopher         \
+          --enable-mqtt           \
+          --enable-manual         \
+          --enable-docs           \
+          --enable-ipv6           \
+          --enable-pthreads       \
+          --enable-verbose        \
+          --enable-sspi           \
+          --enable-basic-auth     \
+          --enable-bearer-auth    \
+          --enable-digest-auth    \
+          --enable-kerberos-auth  \
+          --enable-negotiate-auth \
+          --enable-aws            \
+          --enable-ntlm           \
+          --enable-tls-srp        \
+          --enable-unix-sockets   \
+          --enable-cookies        \
+          --enable-socketpair     \
+          --enable-sspi     \
+          --enable-http-auth
+        
+        cd ../
+
+    - name: Compile
+      shell: bash
+      run: |
+        cd ./.curl
+        make -j$(/usr/bin/nproc) >/dev/null
+        cd ../
+
+    - name: Install
+      shell: bash
+      run: |
+        set -x
+        cd ./.curl
+        sudo make install
+        sudo ldconfig
+        cd ../
+
+    - name: Show version info
+      shell: bash
+      run: |
+        curl --version
 
     - name: Configure build
       shell: bash
