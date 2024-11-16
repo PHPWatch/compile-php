@@ -50,7 +50,6 @@ runs:
           autoconf \
           gcc \
           make \
-          curl \
           unzip \
           bison \
           re2c \
@@ -71,7 +70,6 @@ runs:
           libsqlite3-mod-spatialite \
           libwebp-dev \
           libonig-dev \
-          libcurl4-openssl-dev \
           libxml2-dev \
           libxslt1-dev \
           libpq-dev \
