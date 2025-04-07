@@ -94,7 +94,9 @@ runs:
           libjpeg-dev \
           libpng-dev \
           libavif-dev \
-          libfreetype6-dev
+          libfreetype6-dev \
+          libc-client-dev \
+          libkrb5-dev
         cd ..
 
     - name: Configure build
@@ -148,8 +150,11 @@ runs:
           --enable-unix-sockets   \
           --enable-cookies        \
           --enable-socketpair     \
-          --enable-sspi     \
-          --enable-http-auth
+          --enable-sspi           \
+          --enable-http-auth      \
+          --with-imap             \
+          --with-imap-ssl         \
+          --with-kerberos
         
         cd ../
 
