@@ -15,11 +15,6 @@ runs:
         path: .php-src
         ref: ${{ inputs.branch }}
 
-    - name: Show existing env
-      shell: bash
-      run: |
-        curl --version
-
     - name: Checkout curl repo
       uses: actions/checkout@v4
       with:
@@ -99,6 +94,12 @@ runs:
           libc-client-dev \
           libkrb5-dev
         cd ..
+
+    - name: Show existing env
+      shell: bash
+      run: |
+        curl --version
+        gcc -v
 
     - name: Configure build
       shell: bash
