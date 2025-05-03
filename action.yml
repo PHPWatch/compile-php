@@ -21,7 +21,6 @@ runs:
         repository: curl/curl
         path: .curl
         fetch-depth: 0
-        ref: 'curl-8_12_1'
 
     - name: Checkout latest release tag
       shell: bash
