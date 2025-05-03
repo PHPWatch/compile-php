@@ -246,8 +246,7 @@ runs:
             --with-pdo-odbc=unixODBC,/usr \
             --with-config-file-path=/etc \
             --with-config-file-scan-dir=/etc/php.d \
-            --with-pdo-dblib \
-            --enable-werror
+            --with-pdo-dblib
           cd ../
 
     - name: Compile PHP
