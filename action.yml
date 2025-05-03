@@ -101,7 +101,7 @@ runs:
         curl --version
         gcc -v
 
-    - name: Configure build
+    - name: Configure Curl build
       shell: bash
       run: |
         set -x
@@ -160,14 +160,14 @@ runs:
         
         cd ../
 
-    - name: Compile
+    - name: Compile Curl
       shell: bash
       run: |
         cd ./.curl
         make -j$(/usr/bin/nproc) >/dev/null
         cd ../
 
-    - name: Install
+    - name: Install Curl
       shell: bash
       run: |
         set -x
@@ -251,14 +251,14 @@ runs:
             --enable-werror
           cd ../
 
-    - name: Compile
+    - name: Compile PHP
       shell: bash
       run: |
           cd ./.php-src
           make -j$(/usr/bin/nproc) >/dev/null
           cd ../
 
-    - name: Install
+    - name: Install PHP
       shell: bash
       run: |
           set -x
