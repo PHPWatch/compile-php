@@ -155,6 +155,10 @@ runs:
           --enable-http-auth      \
           --with-imap             \
           --with-imap-ssl         \
+          --with-imap-ssl         \
+          --enable-httpsrr        \
+          --enable-ssls-export    \
+          --enable-sspi           \
           --with-kerberos
         
         cd ../
