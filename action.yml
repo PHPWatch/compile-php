@@ -9,14 +9,14 @@ runs:
   using: composite
   steps:
     - name: Checkout php-src repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: php/php-src
         path: .php-src
         ref: ${{ inputs.branch }}
 
     - name: Checkout curl repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: curl/curl
         path: .curl
