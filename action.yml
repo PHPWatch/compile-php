@@ -186,6 +186,8 @@ runs:
 
     - name: Configure build
       shell: bash
+      env:
+        PHP_BUILD_PROVIDER: "[PHP.Watch] compile-php action"
       run: |
           set -x
           cd .php-src
