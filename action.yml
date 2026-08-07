@@ -9,15 +9,18 @@ runs:
   using: composite
   steps:
     - name: Checkout php-src repo
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
+        persist-credentials: false
         repository: php/php-src
         path: .php-src
         ref: ${{ inputs.branch }}
+        fetch-depth: 0
 
     - name: Checkout curl repo
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
+        persist-credentials: false
         repository: curl/curl
         path: .curl
         fetch-depth: 0
