@@ -15,7 +15,6 @@ runs:
         repository: php/php-src
         path: .php-src
         ref: ${{ inputs.branch }}
-        fetch-depth: 0
 
     - name: Checkout curl repo
       uses: actions/checkout@v7
