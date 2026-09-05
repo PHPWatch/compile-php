@@ -41,8 +41,8 @@ runs:
         sudo sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources
         sudo apt update -y | true
         sudo apt build-dep libcurl4-openssl-dev curl -y
-        sudo apt build-dep libcurl4-openssl-dev curl -y
         sudo apt install -y \
+          ccache \
           libgsasl-dev \
           autoconf \
           gcc \
@@ -95,6 +95,21 @@ runs:
           libc-client-dev \
           libkrb5-dev
         cd ..
+
+    - name: Configure ccache
+      shell: bash
+      run: |
+        mkdir -p "$HOME/.ccache"
+        ccache --set-config=max_size=2G
+        ccache --set-config=compression=true
+
+    - name: Cache ccache
+      uses: actions/cache@v6
+      with:
+        path: ~/.ccache
+        key: ccache-${{ runner.os }}-${{ runner.arch }}-${{ inputs.branch }}-${{ hashFiles('.php-src/**/*.c', '.php-src/**/*.h', '.php-src/**/*.php') }}
+        restore-keys: |
+          ccache-${{ runner.os }}-${{ runner.arch }}-${{ inputs.branch }}-
 
     - name: Show existing env
       shell: bash
@@ -169,6 +184,8 @@ runs:
       shell: bash
       run: |
         cd ./.curl
+        export CC="ccache gcc"
+        export CXX="ccache g++"
         make -j$(/usr/bin/nproc) >/dev/null
         cd ../
 
@@ -261,8 +278,14 @@ runs:
       shell: bash
       run: |
           cd ./.php-src
+          export CC="ccache gcc"
+          export CXX="ccache g++"
           make -j$(/usr/bin/nproc) >/dev/null
           cd ../
+
+    - name: ccache statistics
+      shell: bash
+      run: ccache --show-stats
 
     - name: Install PHP
       shell: bash
