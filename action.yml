@@ -102,18 +102,31 @@ runs:
         mkdir -p "$HOME/.ccache"
         ccache --set-config=max_size=2G
         ccache --set-config=compression=true
+        
+        # Make ccache available to configure/make without having to
+        # export CC in every individual step.
+        echo "CC=ccache gcc" >> "$GITHUB_ENV"
+        echo "CXX=ccache g++" >> "$GITHUB_ENV"
+
+        ccache --show-config
 
     - name: Cache ccache
       uses: actions/cache@v6
       with:
         path: ~/.ccache
-        key: ccache-${{ runner.os }}-${{ runner.arch }}-${{ inputs.branch }}-${{ hashFiles('.php-src/**/*.c', '.php-src/**/*.h', '.php-src/**/*.php') }}
+        key: ccache-${{ runner.os }}-${{ runner.arch }}-${{ inputs.branch }}-${{ hashFiles('.php-src/.git/HEAD') }}
         restore-keys: |
           ccache-${{ runner.os }}-${{ runner.arch }}-${{ inputs.branch }}-
 
     - name: Show existing env
       shell: bash
       run: |
+        set -x
+        echo "CC=$CC"
+        echo "CXX=$CXX"
+        which ccache
+        ccache --version
+        ccache --show-stats
         curl --version
         gcc -v
 
